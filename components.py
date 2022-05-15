@@ -98,3 +98,6 @@ class Board:
             s = list(map(lambda row: [ICON[i] for i in row], s))
             s = reduce(lambda a, b: a+'\n'+b, map(lambda row: reduce(lambda a, b: a+' '+b, row, ''), s))
             return s
+        
+    def change_board(self, board):
+        self.matrix = board
