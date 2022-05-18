@@ -5,7 +5,7 @@ class Othello:
     def __init__(self, board):
         self.board = board
         
-    # self.matirx 반환
+    # self.board 반환
     def get_board(self):
         return self.board
     
@@ -13,7 +13,7 @@ class Othello:
     def search(self, color):
         targets = [] # 현재 유저가 돌을 둘 수 있는 좌표
         delta = ((0, 1), (1, 0), (-1, 0), (0, -1), (1, 1), (-1, 1), (-1, -1), (1, -1)) # 8방향
-        n = len(self.board)
+        n = len(self.board) # n x n board
         
         for y in range(1, n):
             for x in range(1, n):
@@ -42,7 +42,7 @@ class Othello:
                                 
                             nx, ny = nx + dx, ny + dy
                             
-        targets = list(set(map(tuple, targets)))
+        targets = list(set(map(tuple, targets))) # 중복제거
                     
         return targets
     
@@ -64,30 +64,30 @@ class Othello:
                 if nx < 1 or ny < 1 or nx > n-1 or ny > n-1: # 모서리 체크
                     coords = []
                     break
-                elif self.board[nx, ny] == 0 or self.board[nx, ny] == 1:
+                elif self.board[nx, ny] == 0 or self.board[nx, ny] == 1: # 빈칸 or 벽(장애물) 체크
                     coords = []
                     break
-                elif coords != [] and self.board[nx, ny] == color: # 도착점 체크
+                elif coords != [] and self.board[nx, ny] == color: # 도착점에 도달하면 coords를 targets에 추가
                     for coord in coords:
                         targets.append(coord)
                     break
-                elif abs(self.board[nx, ny] - color) == 1:
+                elif abs(self.board[nx, ny] - color) == 1: # 다른 색의 돌이면 coords에 추가
                     coords.append([nx, ny])
                 
                 nx, ny = nx + dx, ny + dy
         
         for target in targets:
-            self.board[target[0], target[-1]] = color
+            self.board[target[0], target[-1]] = color # 돌 뒤집기
     
     # 겜 종료 여부 확인
     def is_game_over(self):
-        result = np.where(self.board == 1)
+        result = np.where(self.board == 1) #빈칸 없으면 끝으로 판정
         if result[0].size == 0:
             return True
         else:
             False
     
-    # 승자 결정
+    # 승자 결정(돌 개수 차이)
     def victory(self):
         board_1d = self.board.flatten()
         sum_white = np.count_nonzero(board_1d == 3)
