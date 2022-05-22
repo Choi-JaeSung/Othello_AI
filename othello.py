@@ -9,6 +9,10 @@ class Othello:
     def get_board(self):
         return self.board
     
+    # self.board 변환
+    def set_board(self, board):
+        self.board = board
+    
     # 현재 유저가 둘 수 있는 좌표 반환
     def search(self, color):
         targets = [] # 현재 유저가 돌을 둘 수 있는 좌표
