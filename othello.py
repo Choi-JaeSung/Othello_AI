@@ -103,9 +103,12 @@ class Othello:
         
         if sum_white == sum_black:
             print("비김")
-        elif sum_white > sum_black:
-            print("백 승")
-        else:
+            return 0
+        elif sum_black > sum_white:
             print("흑 승")
+            return 4
+        else:
+            print("백 승")
+            return 3
         
         
