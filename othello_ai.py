@@ -1,11 +1,10 @@
-import numpy as np
-
 class Othello_ai:
     
     # def __init__(self):
     #     self.offensive_board = []
     #     self.defensive_board = []
 
+    # -1: 둘 수 없는 곳 0: score
     def __init__(self):
         self.board = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
                       [-1,0,0,0,0,0,0,0,0,-1],
