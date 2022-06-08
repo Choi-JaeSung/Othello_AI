@@ -97,9 +97,9 @@ class Othello:
         sum_white = np.count_nonzero(board_1d == 3)
         sum_black = np.count_nonzero(board_1d == 4)
         
-        print("흑 : ", sum_black)
-        print("백 : ", sum_white)
-        print()
+        # print("흑 : ", sum_black)
+        # print("백 : ", sum_white)
+        # print()
         
         if sum_white == sum_black:
             print("비김")

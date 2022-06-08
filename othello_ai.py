@@ -1,9 +1,5 @@
+import matplotlib.pyplot as plt
 class Othello_ai:
-    
-    # def __init__(self):
-    #     self.offensive_board = []
-    #     self.defensive_board = []
-
     # -1: 둘 수 없는 곳 0: score
     def __init__(self):
         self.board = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
@@ -24,22 +20,6 @@ class Othello_ai:
     # self.board 변경
     def get_board(self):
         return self.board
-                
-    # # self.offensive_board 반환
-    # def get_offensive_board(self):
-    #     return self.offensive_board
-    
-    # # self.offensive_board 변경
-    # def set_offensive_board(self, board):
-    #     self.offensive_board = board
-    
-    # # self.defensive_board 반환
-    # def get_defensive_board(self):
-    #     return self.defensive_board
-    
-    # # self.defensive_board 변경
-    # def set_defensive_board(self, board):
-    #     self.defensive_board = board
         
     # 승리시 path에 +1, 패배시 -1
     def learning(self, path, win):
@@ -57,6 +37,14 @@ class Othello_ai:
         
         for target in targets:
             if self.board[target[0]][target[-1]] >= high_score:
-                high_coord = target
-        
+                high_score = self.board[target[0]][target[-1]] # high score 최신화
+                high_coord = target # high_coord 최신화
+
         return high_coord
+    
+    
+    # self.board에 대한 heatmap 추출
+    def get_heatmap(self):
+        plt.pcolor(self.board, cmap='jet') # jet colormap으로 heatmap 추출
+        plt.colorbar() # 수에 따른 색변화
+        plt.show()
