@@ -1,17 +1,16 @@
 import matplotlib.pyplot as plt
+
 class Othello_ai:
     # -1: 둘 수 없는 곳 0: score
     def __init__(self):
-        self.board = [[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
-                      [-1,0,0,0,0,0,0,0,0,-1],
-                      [-1,0,0,0,0,0,0,0,0,-1],
-                      [-1,0,0,0,0,0,0,0,0,-1],
-                      [-1,0,0,0,-1,-1,0,0,0,-1],
-                      [-1,0,0,0,-1,-1,0,0,0,-1],
-                      [-1,0,0,0,0,0,0,0,0,-1],
-                      [-1,0,0,0,0,0,0,0,0,-1],
-                      [-1,0,0,0,0,0,0,0,0,-1],
-                      [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]]
+        self.board = [[0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0]]
 
     # self.board 반환
     def set_board(self, board):
@@ -25,10 +24,9 @@ class Othello_ai:
     def learning(self, path, win):
         for coord in path:
             if win == True:
-                self.board[coord[0]][coord[-1]] += 1
+                self.board[coord[0] - 1][coord[-1] - 1] += 1
             else:
-                if self.board[coord[0]][coord[-1]] != 0:
-                    self.board[coord[0]][coord[-1]] -= 1
+                self.board[coord[0] - 1][coord[-1] - 1] -= 1
     
     # score가 가장 높은 coord로 put
     def estimate(self, targets):
@@ -36,8 +34,8 @@ class Othello_ai:
         high_score = 0
         
         for target in targets:
-            if self.board[target[0]][target[-1]] >= high_score:
-                high_score = self.board[target[0]][target[-1]] # high score 최신화
+            if self.board[target[0] - 1][target[-1] - 1] >= high_score:
+                high_score = self.board[target[0] - 1][target[-1] - 1] # high score 최신화
                 high_coord = target # high_coord 최신화
 
         return high_coord

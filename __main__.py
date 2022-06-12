@@ -3,23 +3,26 @@ from components import Board
 from othello import Othello
 from othello_ai import Othello_ai
 import csv
-import numpy as np
+import os
 
+file_path = os.path.dirname(os.path.realpath(__file__)) # 현재 디렉토리
+data_list = os.listdir(file_path + "/data") # data 폴더 디렉토리
 
-print('mode list')
-print('1.learning\n' +
-       '2.heatmap\n' +
-       '3.play')
+print("mode list")
+print("1.learning\n" +
+      "2.heatmap\n" +
+      "3.play")
+print()
 
-mode = int(input('select number: ')) # select mode
+mode = int(input("select number: ")) # select mode
 
 print()
 if mode == 1:
-    print('--learning mode--')
+    print("--learning mode--")
 elif mode == 2:
-    print('--heatmap mode--')
+    print("--heatmap mode--")
 else:
-    print('--play mode--')
+    print("--play mode--")
 print()
 
 
@@ -28,8 +31,10 @@ if mode == 1:
     othello_ai = Othello_ai()
 
     procedure = [1,2] # 순서
+    
+    num_of_learning = int(input("typing num of learning: ")) # 학습 횟수
 
-    for rep in range(0, 100):
+    for rep in range(0, num_of_learning):
         print(rep)
         
         board = Board()
@@ -76,7 +81,8 @@ if mode == 1:
                     othello_ai.learning(path, True)
                 else:
                     othello_ai.learning(path, False)
-                    
+                
+                print()
                 break
             else:
                 turn += 1
@@ -87,7 +93,7 @@ if mode == 1:
         print(line)
 
     # learning 결과 저장
-    with open("data/othello_ai(rep_100).csv", 'w', newline="") as file:
+    with open(file_path + "/data/othello_ai(rep_" + str(num_of_learning) + ").csv", 'w', newline="") as file:
         writer = csv.writer(file)
         for line in othello_ai.get_board():
             writer.writerow(line)
@@ -96,7 +102,15 @@ else:
     othello_ai = Othello_ai()
     board = []
     
-    with open("data/othello_ai(rep_1million).csv", 'r', encoding='utf-8', newline="") as file:
+    data_num = 1
+    for data in data_list:
+        print(str(data_num) + ".", data)
+        data_num += 1
+    
+    print()
+    data_index = int(input("select data(num): ")) - 1
+    
+    with open(file_path + "/data/" + data_list[data_index], 'r', encoding='utf-8', newline="") as file:
         reader = csv.reader(file)
         
         for i, line in enumerate(reader):
@@ -108,11 +122,7 @@ else:
     
     # show heatmap
     if mode == 2:
-        board_nc = np.array(board)
-        
-        board_nc = board_nc[1:-1, 1:-1]
-        
-        othello_ai.set_board(board_nc)
+        othello_ai.set_board(board)
         
         othello_ai.get_heatmap()
     
