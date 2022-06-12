@@ -108,7 +108,7 @@ else:
         data_num += 1
     
     print()
-    data_index = int(input("select data(num): ")) - 1
+    data_index = int(input("select data(num): ")) - 1 # 선택한 data
     
     with open(file_path + "/data/" + data_list[data_index], 'r', encoding='utf-8', newline="") as file:
         reader = csv.reader(file)
