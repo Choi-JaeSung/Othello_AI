@@ -7,7 +7,14 @@ from misc import *
 
 
 class Board:
-    def __init__(self, matrix=MATRIX):
+    def __init__(self, board_size):
+        if board_size == 4:
+            matrix = MATRIX1
+        elif board_size == 6:
+            matrix = MATRIX2
+        else:
+            board_size = MATRIX3
+            
         matrix = list(map(lambda x: list(map(int, list(x))), matrix.split()))
         try:
             matrix = np.matrix(matrix, dtype=np.byte)

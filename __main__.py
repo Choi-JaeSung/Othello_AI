@@ -10,8 +10,7 @@ import time
 import datetime
 
 
-file_path = os.path.dirname(os.path.realpath(__file__)) # 현재 디렉토리
-data_list = os.listdir(file_path + "/data") # data 폴더 디렉토리
+data_path = os.path.join(os.path.dirname(__file__), "data", "negative score(included)") # data폴더 경로
 
 print("mode list")
 print("1.learning\n" +
@@ -31,20 +30,50 @@ else:
 print()
 
 
+while True:
+    print("1. 4 x 4")
+    print("2. 6 x 6")
+    print("3. 8 x 8")
+    print()
+    
+    board_size = int(input("select num for board_size: ")) # board_size 결정
+    print()
+    
+    if board_size == 1:
+        board_size = 4
+        data_path = os.path.join(data_path, "4 x 4")
+        break
+    elif board_size == 2:
+        board_size = 6
+        data_path = os.path.join(data_path, "6 x 6")
+        break
+    elif board_size == 3:
+        board_size = 8
+        data_path = os.path.join(data_path, "8 x8")
+        break
+    else:
+        print("잘못 입력했습니다. 다시 입력해주세요.")
+        print()
+
 # learning AI
 if mode == 1:
     start_time = time.time() # start_time 저장
     
-    othello_ai = Othello_ai()
+    if board_size == 4:
+        othello_ai = Othello_ai(4)
+    elif board_size == 6:
+        othello_ai = Othello_ai(6)
+    elif board_size == 8:
+        othello_ai = Othello_ai(8)
 
     procedure = [1,2] # 순서
     
     num_of_learning = int(input("typing num of learning: ")) # 학습 횟수
 
     for rep in range(0, num_of_learning):
-        print(rep)
+        print("{0}번째".format(rep + 1))
         
-        board = Board()
+        board = Board(board_size)
         othello = Othello(board.matrix)
         
         turn = 1
@@ -105,12 +134,14 @@ if mode == 1:
         print(line)
 
     # learning 결과 저장
-    with open(file_path + "/data/othello_ai(rep_" + str(num_of_learning) + ").csv", 'w', newline="") as file:
+    with open(os.path.join(data_path, "othello_ai(" + str(board_size) + " x " + str(board_size) + ")(rep_" + str(num_of_learning) + ").csv"), 'w', newline="") as file:
         writer = csv.writer(file)
         for line in othello_ai.get_board():
             writer.writerow(line)
 
 else:
+    data_list = os.listdir(data_path) # data 폴더 디렉토리
+
     othello_ai = Othello_ai()
     board = []
     
@@ -122,7 +153,7 @@ else:
     print()
     data_index = int(input("select data(num): ")) - 1 # 선택한 data
     
-    with open(file_path + "/data/" + data_list[data_index], 'r', encoding='utf-8', newline="") as file:
+    with open(os.path.join(data_path, data_list[data_index]), 'r', encoding='utf-8', newline="") as file:
         reader = csv.reader(file)
         
         for i, line in enumerate(reader):
@@ -145,7 +176,7 @@ else:
         
         procedure = [1,2] # 순서
         
-        board = Board()
+        board = Board(board_size)
         othello = Othello(board.matrix)
         
         player1 = 0 # player1 color
