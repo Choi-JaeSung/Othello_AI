@@ -1,9 +1,14 @@
 import random as rd
+
 from components import Board
 from othello import Othello
 from othello_ai import Othello_ai
+
 import csv
 import os
+import time
+import datetime
+
 
 file_path = os.path.dirname(os.path.realpath(__file__)) # 현재 디렉토리
 data_list = os.listdir(file_path + "/data") # data 폴더 디렉토리
@@ -28,6 +33,8 @@ print()
 
 # learning AI
 if mode == 1:
+    start_time = time.time() # start_time 저장
+    
     othello_ai = Othello_ai()
 
     procedure = [1,2] # 순서
@@ -87,6 +94,11 @@ if mode == 1:
             else:
                 turn += 1
 
+    times = time.time() - start_time # 걸린 시간 저장
+    times = str(datetime.timedelta(seconds=times)).split('.')[0] # 소수점 제거한 시간
+    print(times)
+    
+    
     # learning 결과 출력
     board = othello_ai.get_board()
     for line in board:
