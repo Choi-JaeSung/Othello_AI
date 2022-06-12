@@ -13,20 +13,20 @@ import datetime
 data_path = os.path.join(os.path.dirname(__file__), "data", "negative score(included)") # data폴더 경로
 
 print("mode list")
-print("1.learning\n" +
-      "2.heatmap\n" +
-      "3.play")
+print("1.Learning\n" +
+      "2.Heatmap\n" +
+      "3.Play")
 print()
 
-mode = int(input("select number: ")) # select mode
+mode = int(input("Select number: ")) # select mode
 
 print()
 if mode == 1:
-    print("--learning mode--")
+    print("--Learning mode--")
 elif mode == 2:
-    print("--heatmap mode--")
+    print("--Heatmap mode--")
 else:
-    print("--play mode--")
+    print("--Play mode--")
 print()
 
 
@@ -36,7 +36,7 @@ while True:
     print("3. 8 x 8")
     print()
     
-    board_size = int(input("select num for board_size: ")) # board_size 결정
+    board_size = int(input("Select num for board_size: ")) # board_size 결정
     print()
     
     if board_size == 1:
@@ -68,7 +68,7 @@ if mode == 1:
 
     procedure = [1,2] # 순서
     
-    num_of_learning = int(input("typing num of learning: ")) # 학습 횟수
+    num_of_learning = int(input("Typing num of learning: ")) # 학습 횟수
 
     for rep in range(0, num_of_learning):
         print("{0}번째".format(rep + 1))
@@ -142,7 +142,7 @@ if mode == 1:
 else:
     data_list = os.listdir(data_path) # data 폴더 디렉토리
 
-    othello_ai = Othello_ai()
+    othello_ai = Othello_ai(board_size)
     board = []
     
     data_num = 1
@@ -151,7 +151,7 @@ else:
         data_num += 1
     
     print()
-    data_index = int(input("select data(num): ")) - 1 # 선택한 data
+    data_index = int(input("Select data(num): ")) - 1 # 선택한 data
     
     with open(os.path.join(data_path, data_list[data_index]), 'r', encoding='utf-8', newline="") as file:
         reader = csv.reader(file)
@@ -172,81 +172,201 @@ else:
     
     # play with AI
     if mode == 3:
-        othello_ai.set_board(board)
-        
-        procedure = [1,2] # 순서
-        
-        board = Board(board_size)
-        othello = Othello(board.matrix)
-        
-        player1 = 0 # player1 color
-        
-        turn = 1
-        color = 0
-        pass_cnt = 0 # 두 플레이어 둘 곳 없는지 판단
-        
-        order_ai = rd.choice(procedure)
-        
-        if order_ai == 1: # 첫 번쨰 차례면 흑 두 번째면 백
-            player1 = 4
-        else:
-            player1 = 3
-        
         while True:
-            print(turn, "번째 턴")
-            print('verbose=True')
-            print(board.visualize(verbose=True))
+            print("1. You vs AI")
+            print("2. Random pick model vs AI")
             print()
             
-            if turn % 2 == 1:
-                print("흑의 차례")
-                color = 4
-                next = othello.search(color)
-            else:
-                print("백의 차례")
-                color = 3
-                next = othello.search(color)
+            play_mode = int(input("Select play mode: "))
             
-            print()
-            print(next)
-            print()
-            
-            if next == []:
-                print("둘 곳이 없습니다.")
-                print("턴을 넘깁니다.")
-                print()
-                
-                pass_cnt += 1
-            else:
-                pass_cnt = 0
-                
-                if color == player1:
-                    x, y = othello_ai.estimate(next) # 둘 수 있는 좌표 중 최고 score 위치 선택
-                    othello.put(x, y, color)
-                    print("AI의 선택: (", x, ",", y, ")")
-                    
-                else:
-                    while True:
-                        is_right = False
-                        x, y = map(int, input("좌표를 입력하세요: ").split(','))
-                        for coord in next:
-                            if coord[0] == x and coord[-1] == y:
-                                is_right = True
-                                
-                        if is_right == True:
-                            othello.put(x, y, color)
-                            break
-                        else:
-                            print("올바른 좌표를 입력해주세요!")
-                            print()
-                            print(next)
-                            print()
-                
-                board.change_board(othello.get_board()) # put으로 변경된 board 최신화
-                
-            if othello.is_game_over() == True or pass_cnt == 2:
-                print(board.visualize(verbose=True))
-                win = othello.victory()
+            if play_mode == 1:
+                break
+            elif play_mode == 2:
                 break
             else:
-                turn += 1
+                print("잘못 입력했습니다. 다시 입력해주세요.")
+                print()
+        
+        if play_mode == 1:
+            print("----You vs AI----")
+            print()
+            
+            othello_ai.set_board(board)
+        
+            procedure = [1,2] # 순서
+            
+            board_of_othello = Board(board_size)
+            othello = Othello(board_of_othello.matrix)
+            
+            player1 = 0 # player1 color
+            
+            turn = 1
+            color = 0
+            pass_cnt = 0 # 두 플레이어 둘 곳 없는지 판단
+            
+            order_ai = rd.choice(procedure)
+            
+            if order_ai == 1: # 첫 번쨰 차례면 흑 두 번째면 백
+                player1 = 4
+            else:
+                player1 = 3
+                
+            while True:
+                print(turn, "번째 턴")
+                print('verbose=True')
+                print(board_of_othello.visualize(verbose=True))
+                print()
+                
+                if turn % 2 == 1:
+                    print("흑의 차례")
+                    color = 4
+                    next = othello.search(color)
+                else:
+                    print("백의 차례")
+                    color = 3
+                    next = othello.search(color)
+                
+                print()
+                print(next)
+                print()
+                
+                if next == []:
+                    print("둘 곳이 없습니다.")
+                    print("턴을 넘깁니다.")
+                    print()
+                    
+                    pass_cnt += 1
+                else:
+                    pass_cnt = 0
+                    
+                    if color == player1:
+                        x, y = othello_ai.estimate(next) # 둘 수 있는 좌표 중 최고 score 위치 선택
+                        othello.put(x, y, color)
+                        print("AI의 선택: (", x, ",", y, ")")
+                        print()
+                        
+                    else:
+                        while True:
+                            is_right = False
+                            x, y = map(int, input("좌표를 입력하세요: ").split(','))
+                            for coord in next:
+                                if coord[0] == x and coord[-1] == y:
+                                    is_right = True
+                                    
+                            if is_right == True:
+                                othello.put(x, y, color)
+                                break
+                            else:
+                                print("올바른 좌표를 입력해주세요!")
+                                print()
+                                print(next)
+                                print()
+                    
+                    board_of_othello.change_board(othello.get_board()) # put으로 변경된 board 최신화
+                    
+                if othello.is_game_over() == True or pass_cnt == 2:
+                    print(board_of_othello.visualize(verbose=True))
+                    win = othello.victory()
+                    break
+                else:
+                    turn += 1
+        else:
+            print("----Random pick model vs AI----")
+            print()
+            
+            num_of_playing = int(input("Typing num_of_playing: ")) # play 횟수 결정
+            
+            win_num = 0
+            draw_num = 0
+            lose_num = 0
+            
+            for rep in range(0, num_of_playing):
+                start_time = time.time() # start_time 저장
+                
+                print("{0}번째 게임".format(rep + 1))
+                print()
+                
+                othello_ai.set_board(board)
+        
+                procedure = [1,2] # 순서
+                
+                board_of_othello = Board(board_size)
+                othello = Othello(board_of_othello.matrix)
+                
+                ai_color = 0 # AI color
+                
+                turn = 1
+                color = 0
+                pass_cnt = 0 # 두 플레이어 둘 곳 없는지 판단
+                
+                order_ai = rd.choice(procedure)
+                
+                if order_ai == 1: # 첫 번쨰 차례면 흑 두 번째면 백
+                    ai_color = 4
+                else:
+                    ai_color = 3
+                
+                while True:
+                    print(turn, "번째 턴")
+                    print('verbose=True')
+                    print(board_of_othello.visualize(verbose=True))
+                    print()
+                    
+                    if turn % 2 == 1:
+                        print("흑의 차례")
+                        color = 4
+                        next = othello.search(color)
+                    else:
+                        print("백의 차례")
+                        color = 3
+                        next = othello.search(color)
+                    
+                    print()
+                    print(next)
+                    print()
+                    
+                    if next == []:
+                        print("둘 곳이 없습니다.")
+                        print("턴을 넘깁니다.")
+                        print()
+                        
+                        pass_cnt += 1
+                    else:
+                        pass_cnt = 0
+                        
+                        if color == ai_color:
+                            x, y = othello_ai.estimate(next) # 둘 수 있는 좌표 중 최고 score 위치 선택
+                            othello.put(x, y, color)
+                            print("AI의 선택: (", x, ",", y, ")")
+                            print()
+                            
+                        else:
+                            x, y = rd.choice(next)
+                            othello.put(x, y, color)
+                        
+                        board_of_othello.change_board(othello.get_board()) # put으로 변경된 board 최신화
+                        
+                    if othello.is_game_over() == True or pass_cnt == 2:
+                        print(board_of_othello.visualize(verbose=True))
+                        print()
+                        
+                        win = othello.victory()
+                        print()
+                        
+                        if win == ai_color:
+                            win_num += 1
+                        elif win == 0:
+                            draw_num += 1
+                        else:
+                            lose_num += 1
+                            
+                        break
+                    else:
+                        turn += 1
+                        
+                times = time.time() - start_time # 걸린 시간 저장
+                times = str(datetime.timedelta(seconds=times)).split('.')[0] # 소수점 제거한 시간
+                print(times)
+                print()
+                
+                print("AI: {0}전 {1}승 {2}무 {3}패".format(num_of_playing, win_num, draw_num, lose_num))

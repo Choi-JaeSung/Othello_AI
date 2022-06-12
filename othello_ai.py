@@ -46,7 +46,7 @@ class Othello_ai:
     # score가 가장 높은 coord로 put
     def estimate(self, targets):
         high_coord = (0,0)
-        high_score = 0
+        high_score = -100000000
         
         for target in targets:
             if self.board[target[0] - 1][target[-1] - 1] >= high_score:

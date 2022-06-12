@@ -13,7 +13,7 @@ class Board:
         elif board_size == 6:
             matrix = MATRIX2
         else:
-            board_size = MATRIX3
+            matrix = MATRIX3
             
         matrix = list(map(lambda x: list(map(int, list(x))), matrix.split()))
         try:
