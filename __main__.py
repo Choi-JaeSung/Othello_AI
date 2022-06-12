@@ -49,7 +49,7 @@ while True:
         break
     elif board_size == 3:
         board_size = 8
-        data_path = os.path.join(data_path, "8 x8")
+        data_path = os.path.join(data_path, "8 x 8")
         break
     else:
         print("잘못 입력했습니다. 다시 입력해주세요.")
