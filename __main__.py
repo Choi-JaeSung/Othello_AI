@@ -9,25 +9,34 @@ import os
 import time
 import datetime
 
+import matplotlib.pyplot as plt
+
 
 data_path = os.path.join(os.path.dirname(__file__), "data", "negative score(included)") # data폴더 경로
 
-print("mode list")
-print("1.Learning\n" +
-      "2.Heatmap\n" +
-      "3.Play")
-print()
+while True:
+    print("mode list")
+    print("1.Learning\n" +
+        "2.Heatmap\n" +
+        "3.Play")
+    print()
 
-mode = int(input("Select number: ")) # select mode
+    mode = int(input("Select number: ")) # select mode
 
-print()
-if mode == 1:
-    print("--Learning mode--")
-elif mode == 2:
-    print("--Heatmap mode--")
-else:
-    print("--Play mode--")
-print()
+    print()
+    if mode == 1:
+        print("--Learning mode--")
+        break
+    elif mode == 2:
+        print("--Heatmap mode--")
+        break
+    elif mode == 3:
+        print("--Play mode--")
+        break
+    else:
+        print("잘못 입력했습니다. 다시 입력해주세요.")
+        print()
+    print()
 
 
 while True:
@@ -280,8 +289,12 @@ else:
             draw_num = 0
             lose_num = 0
             
+            depth_list = [] # depths
+            
             for rep in range(0, num_of_playing):
                 start_time = time.time() # start_time 저장
+                
+                depth_of_game = 0 # depth per game
                 
                 print("{0}번째 게임".format(rep + 1))
                 print()
@@ -345,6 +358,7 @@ else:
                             othello.put(x, y, color)
                         
                         board_of_othello.change_board(othello.get_board()) # put으로 변경된 board 최신화
+                        depth_of_game += 1
                         
                     if othello.is_game_over() == True or pass_cnt == 2:
                         print(board_of_othello.visualize(verbose=True))
@@ -359,7 +373,9 @@ else:
                             draw_num += 1
                         else:
                             lose_num += 1
-                            
+                        
+                        depth_list.append(depth_of_game)
+                        
                         break
                     else:
                         turn += 1
@@ -369,4 +385,7 @@ else:
                 print(times)
                 print()
                 
-                print("AI: {0}전 {1}승 {2}무 {3}패".format(num_of_playing, win_num, draw_num, lose_num))
+            print("AI: {0}전 {1}승 {2}무 {3}패".format(num_of_playing, win_num, draw_num, lose_num))
+            
+            plt.hist(depth_list, num_of_playing) # depth_list histogram
+            plt.show()
