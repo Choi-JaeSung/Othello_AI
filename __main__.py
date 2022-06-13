@@ -175,7 +175,7 @@ else:
     # show heatmap
     if mode == 2:
         othello_ai.set_board(board)
-        
+
         othello_ai.get_heatmap()
     
     
@@ -184,6 +184,7 @@ else:
         while True:
             print("1. You vs AI")
             print("2. Random pick model vs AI")
+            print("3. Random pick model vs AI(static)")
             print()
             
             play_mode = int(input("Select play mode: "))
@@ -191,6 +192,8 @@ else:
             if play_mode == 1:
                 break
             elif play_mode == 2:
+                break
+            elif play_mode == 3:
                 break
             else:
                 print("잘못 입력했습니다. 다시 입력해주세요.")
@@ -279,7 +282,7 @@ else:
                     break
                 else:
                     turn += 1
-        else:
+        elif play_mode == 2:
             print("----Random pick model vs AI----")
             print()
             
@@ -387,5 +390,133 @@ else:
                 
             print("AI: {0}전 {1}승 {2}무 {3}패".format(num_of_playing, win_num, draw_num, lose_num))
             
-            plt.hist(depth_list, num_of_playing) # depth_list histogram
-            plt.show()
+            # plt.hist(depth_list, num_of_playing) # depth_list histogram
+            # plt.show()
+        else:
+            print("----Random pick model vs AI(static)----")
+            print()
+            
+            num_of_playing = int(input("Typing num_of_playing: ")) # play 횟수 결정
+            
+            vs_rate = [] # [win_num, draw_num, lose_num]
+            
+            # depth_list = [] # depths
+            
+            for procedure in [1,2]:
+                win_num = 0
+                draw_num = 0
+                lose_num = 0
+
+                if procedure == 1:
+                    print("AI 선공")
+                    print()
+                else:
+                    print("AI 후공")
+                    print()
+                
+                for rep in range(0, num_of_playing):
+                    start_time = time.time() # start_time 저장
+                    
+                    # depth_of_game = 0 # depth per game
+                    
+                    print("{0}번째 게임".format(rep + 1))
+                    print()
+                    
+                    othello_ai.set_board(board)
+                    
+                    board_of_othello = Board(board_size)
+                    othello = Othello(board_of_othello.matrix)
+                    
+                    ai_color = 0 # AI color
+                    
+                    turn = 1
+                    color = 0
+                    pass_cnt = 0 # 두 플레이어 둘 곳 없는지 판단
+                    
+                    if procedure == 1: # 첫 번쨰 차례면 흑 두 번째면 백
+                        ai_color = 4
+                    else:
+                        ai_color = 3
+                    
+                    while True:
+                        print(turn, "번째 턴")
+                        print('verbose=True')
+                        print(board_of_othello.visualize(verbose=True))
+                        print()
+                        
+                        if turn % 2 == 1:
+                            print("흑의 차례")
+                            color = 4
+                            next = othello.search(color)
+                        else:
+                            print("백의 차례")
+                            color = 3
+                            next = othello.search(color)
+                        
+                        print()
+                        print(next)
+                        print()
+                        
+                        if next == []:
+                            print("둘 곳이 없습니다.")
+                            print("턴을 넘깁니다.")
+                            print()
+                            
+                            pass_cnt += 1
+                        else:
+                            pass_cnt = 0
+                            
+                            if color == ai_color:
+                                x, y = othello_ai.estimate(next) # 둘 수 있는 좌표 중 최고 score 위치 선택
+                                othello.put(x, y, color)
+                                print("AI의 선택: (", x, ",", y, ")")
+                                print()
+                                
+                            else:
+                                x, y = rd.choice(next)
+                                othello.put(x, y, color)
+                            
+                            board_of_othello.change_board(othello.get_board()) # put으로 변경된 board 최신화
+                            # depth_of_game += 1
+                            
+                        if othello.is_game_over() == True or pass_cnt == 2:
+                            print(board_of_othello.visualize(verbose=True))
+                            print()
+                            
+                            win = othello.victory()
+                            print()
+                            
+                            if win == ai_color:
+                                win_num += 1
+                            elif win == 0:
+                                draw_num += 1
+                            else:
+                                lose_num += 1
+                            
+                            # depth_list.append(depth_of_game)
+                            
+                            break
+                        else:
+                            turn += 1
+                            
+                    times = time.time() - start_time # 걸린 시간 저장
+                    times = str(datetime.timedelta(seconds=times)).split('.')[0] # 소수점 제거한 시간
+                    print(times)
+                    print()
+                    
+                vs_rate.append([win_num, draw_num, lose_num])
+                
+            rate_index = 0
+            for rate in vs_rate:
+                if rate_index == 0:
+                    print("AI(선공): {0}전 {1}승 {2}무 {3}패".format(num_of_playing, rate[0], rate[1], rate[-1]))
+                    print("승률: {0}%".format(int((rate[0] / num_of_playing) * 100)))
+                    print()
+                    rate_index += 1
+                else:
+                    print("AI(후공): {0}전 {1}승 {2}무 {3}패".format(num_of_playing, rate[0], rate[1], rate[-1]))
+                    print("승률: {0}%".format(int((rate[0] / num_of_playing) * 100)))
+                    print()
+                    
+                # plt.hist(depth_list, num_of_playing) # depth_list histogram
+                # plt.show()

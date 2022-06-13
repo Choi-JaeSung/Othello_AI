@@ -58,6 +58,6 @@ class Othello_ai:
     
     # self.board에 대한 heatmap 추출
     def get_heatmap(self):
-        plt.pcolor(self.board, cmap='jet') # jet colormap으로 heatmap 추출
+        plt.imshow(self.board, cmap='jet') # jet colormap으로 heatmap 추출
         plt.colorbar() # 수에 따른 색변화
         plt.show()
